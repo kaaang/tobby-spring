@@ -1,13 +1,39 @@
 package com.study.tobbyspring.user.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
+/**
+ * Created by pilhwankim on 13/12/2017.
+ */
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-    private String id;
-    private String name;
-    private String password;
+    String id;
+    String name;
+    String password;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

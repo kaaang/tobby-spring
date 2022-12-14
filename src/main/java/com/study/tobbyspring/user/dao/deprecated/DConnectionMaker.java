@@ -1,16 +1,18 @@
-package com.study.tobbyspring.user.dao;
+package com.study.tobbyspring.user.dao.deprecated;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * ConnectionMaker 인터페이스 도입으로 인해 확장이 가능해졌다.
+ */
+@Deprecated
 public class DConnectionMaker implements ConnectionMaker{
-    @Override
+    
     public Connection makeConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
-
-        return DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/tobby", "root", "12341234"
-        );
+        Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook", "spring", "book");
+        return c;
     }
 }

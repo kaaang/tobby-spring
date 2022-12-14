@@ -1,0 +1,13 @@
+services:
+  mysql:
+    container_name: tobby
+    image: mysql:8
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: tobby
+      MYSQL_USER: tobby
+      MYSQL_PASSWORD: tobby
+      MYSQL_DATABASE: tobby
+      TZ: UTC
+    ports:
+      - 3306:3306
