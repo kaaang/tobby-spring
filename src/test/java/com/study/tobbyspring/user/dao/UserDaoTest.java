@@ -1,18 +1,14 @@
 package com.study.tobbyspring.user.dao;
 
 import com.study.tobbyspring.user.domain.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.sql.DataSource;
@@ -28,8 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 //@DirtiesContext
 class UserDaoTest {
 //    @Autowired ApplicationContext context;
-//    @Autowired private UserDao dao;
-    private UserDao dao;
+    @Autowired private UserDaoJdbc dao;
+//    private UserDaoJdbc dao;
+    @Autowired DataSource dataSource;
 
     private User user1;
     private User user2;
@@ -48,7 +45,7 @@ class UserDaoTest {
 //        );
 //        dao.setDataSource(dataSource);
 
-        dao = new UserDao();
+        dao = new UserDaoJdbc();
         DataSource dataSource = new SingleConnectionDataSource(
                 "jdbc:mysql://localhost/tobby", "tobby", "tobby", true
         );
@@ -130,6 +127,16 @@ class UserDaoTest {
         checkSameUser(user1, users3.get(0));
         checkSameUser(user2, users3.get(1));
         checkSameUser(user3, users3.get(2));
+    }
+
+    @Test
+    void duplicateKey() {
+        dao.deleteAll();
+
+        assertThatThrownBy(() -> {
+            dao.add(user1);
+            dao.add(user1);
+        }).isInstanceOf(DataAccessException.class);
     }
 
     private void checkSameUser(User user1, User user2){

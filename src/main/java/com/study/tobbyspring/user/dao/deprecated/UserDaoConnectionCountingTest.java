@@ -1,7 +1,7 @@
 package com.study.tobbyspring.user.dao.deprecated;
 
 import com.study.tobbyspring.user.dao.DaoFactory;
-import com.study.tobbyspring.user.dao.UserDao;
+import com.study.tobbyspring.user.dao.UserDaoJdbc;
 import com.study.tobbyspring.user.domain.User;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -17,7 +17,7 @@ public class UserDaoConnectionCountingTest {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
-        UserDao userDao = context.getBean("userDaoWithCounting", UserDao.class);
+        UserDaoJdbc userDao = context.getBean("userDaoWithCounting", UserDaoJdbc.class);
 
         User user = new User();
         user.setId("leon0517");

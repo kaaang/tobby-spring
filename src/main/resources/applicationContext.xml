@@ -11,10 +11,9 @@
         <property name="password" value="tobby"/>
     </bean>
 
-<!--    <bean id="userDao" class="com.study.tobbyspring.user.dao.UserDao">-->
-<!--        <property name="dataSource" ref="dataSource"/>-->
-<!--        <property name="JdbcContext" ref="jdbcContext"/>-->
-<!--    </bean>-->
+    <bean id="userDao" class="com.study.tobbyspring.user.dao.UserDaoJdbc">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 
     <bean id="jdbcContext" class="com.study.tobbyspring.user.dao.deprecated.JdbcContext">
         <property name="dataSource" ref="dataSource"/>
