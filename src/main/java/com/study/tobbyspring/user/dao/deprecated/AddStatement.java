@@ -1,6 +1,5 @@
 package com.study.tobbyspring.user.dao.deprecated;
 
-import com.study.tobbyspring.user.dao.StatementStrategy;
 import com.study.tobbyspring.user.domain.User;
 
 import java.sql.Connection;

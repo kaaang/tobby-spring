@@ -1,7 +1,5 @@
 package com.study.tobbyspring.user.dao.deprecated;
 
-import com.study.tobbyspring.user.dao.StatementStrategy;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

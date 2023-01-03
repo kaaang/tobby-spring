@@ -1,39 +1,33 @@
 package com.study.tobbyspring.user.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-/**
- * Created by pilhwankim on 13/12/2017.
- */
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+//@Entity
 public class User {
+//    @Id
     String id;
     String name;
     String password;
+    Level level;
+    int login;
+    int recommend;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void upgradeLevel(){
+        Level nextLevel = this.level.nextLevel();
+        if(nextLevel == null){
+            throw new IllegalStateException(this.level + "은 업그레이드가 불가능합니다.");
+        }else{
+            this.level = nextLevel;
+        }
     }
 }

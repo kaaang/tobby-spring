@@ -1,5 +1,6 @@
 package com.study.tobbyspring.user.dao;
 
+import com.study.tobbyspring.user.domain.Level;
 import com.study.tobbyspring.user.domain.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,11 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 //@SpringBootTest
 //@ContextConfiguration(locations = "/applicationContext.xml")
 @ContextConfiguration(locations = "/test-applicationContext.xml")
-//@DirtiesContext
 class UserDaoTest {
-//    @Autowired ApplicationContext context;
     @Autowired private UserDaoJdbc dao;
-//    private UserDaoJdbc dao;
     @Autowired DataSource dataSource;
 
     private User user1;
@@ -34,20 +32,13 @@ class UserDaoTest {
 
     @BeforeEach
     void setUp(){
-        this.user1 = new User("1", "name1", "pass1");
-        this.user2 = new User("2", "name2", "pass2");
-        this.user3 = new User("3", "name3", "pass3");
-
-//        this.dao = context.getBean("userDao", UserDao.class);
-
-//        DataSource dataSource = new SingleConnectionDataSource(
-//          "jdbc:mysql://localhost/testdb", "tobby","tobby", true
-//        );
-//        dao.setDataSource(dataSource);
+        this.user1 = new User("1", "name1", "pass1", Level.BASIC, 1, 0);
+        this.user2 = new User("2", "name2", "pass2", Level.SILVER, 55, 10);
+        this.user3 = new User("3", "name3", "pass3", Level.GOLD, 100, 40);
 
         dao = new UserDaoJdbc();
         DataSource dataSource = new SingleConnectionDataSource(
-                "jdbc:mysql://localhost/tobby", "tobby", "tobby", true
+                "jdbc:mysql://localhost:3306/tobby", "root", "root", true
         );
         dao.setDataSource(dataSource);
 
@@ -61,8 +52,8 @@ class UserDaoTest {
 
     @Test
     void addAndGet() throws SQLException {
-        User user1 = new User("1", "name1", "pass1");
-        User user2 = new User("2", "name2", "pass2");
+        this.user1 = new User("1", "name1", "pass1", Level.BASIC, 1, 0);
+        this.user2 = new User("2", "name2", "pass2", Level.SILVER, 55, 10);
 
         dao.deleteAll();
         assertThat(dao.getCount()).isEqualTo(0);
@@ -71,12 +62,10 @@ class UserDaoTest {
         dao.add(user2);
 
         User userGet1 = dao.get(user1.getId());
-        assertThat(userGet1.getName()).isEqualTo(user1.getName());
-        assertThat(userGet1.getPassword()).isEqualTo(user1.getPassword());
+        this.checkSameUser(userGet1, user1);
 
         User userGet2 = dao.get(user2.getId());
-        assertThat(userGet2.getName()).isEqualTo(user2.getName());
-        assertThat(userGet2.getPassword()).isEqualTo(user2.getPassword());
+        this.checkSameUser(userGet2, user2);
     }
 
     @Test
@@ -139,9 +128,33 @@ class UserDaoTest {
         }).isInstanceOf(DataAccessException.class);
     }
 
+    @Test
+    void update() {
+        dao.deleteAll();
+
+        dao.add(user1);
+        dao.add(user2);
+
+        user1.setName("kangShin");
+        user1.setPassword("pppppppp");
+        user1.setLevel(Level.GOLD);
+        user1.setLogin(1000);
+        user1.setRecommend(999);
+        dao.update(user1);
+
+        User user1update = dao.get(user1.getId());
+        checkSameUser(user1, user1update);
+
+        User user2same = dao.get(user2.getId());
+        checkSameUser(user2, user2same);
+    }
+
     private void checkSameUser(User user1, User user2){
         assertThat(user1.getId()).isEqualTo(user2.getId());
         assertThat(user1.getName()).isEqualTo(user2.getName());
         assertThat(user1.getPassword()).isEqualTo(user2.getPassword());
+        assertThat(user1.getLevel()).isEqualTo(user2.getLevel());
+        assertThat(user1.getLogin()).isEqualTo(user2.getLogin());
+        assertThat(user1.getRecommend()).isEqualTo(user2.getRecommend());
     }
 }

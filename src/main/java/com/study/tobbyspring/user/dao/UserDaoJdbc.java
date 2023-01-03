@@ -1,9 +1,8 @@
 package com.study.tobbyspring.user.dao;
 
-import com.study.tobbyspring.user.dao.deprecated.JdbcContext;
+import com.study.tobbyspring.user.domain.Level;
 import com.study.tobbyspring.user.domain.User;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -25,7 +24,7 @@ public class UserDaoJdbc implements UserDao{
 
 
     public void add(final User user){
-        this.jdbcTemplate.update("insert into users(id, name, password) value(?,?,?)", user.getId(), user.getName(), user.getPassword());
+        this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend) value(?,?,?,?,?,?)", user.getId(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend());
     }
 
     public User get(String id){
@@ -57,6 +56,11 @@ public class UserDaoJdbc implements UserDao{
         return this.jdbcTemplate.query("select * from users order by id", userMapper);
     }
 
+    public void update(User user){
+        this.jdbcTemplate.update("update users set name = ?, password =?, level = ?, login = ?, recommend = ? where id = ?",
+                user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getId());
+    }
+
     private RowMapper<User> userMapper = new RowMapper<User>() {
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -64,6 +68,9 @@ public class UserDaoJdbc implements UserDao{
             user.setId(rs.getString("id"));
             user.setName(rs.getString("name"));
             user.setPassword(rs.getString("password"));
+            user.setLevel(Level.valueOf(rs.getInt("level")));
+            user.setLogin(rs.getInt("login"));
+            user.setRecommend(rs.getInt("recommend"));
             return user;
         }
     };
